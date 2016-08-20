@@ -2,7 +2,7 @@ defmodule Db.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :db,
+    [app: Db,
      version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
@@ -14,7 +14,12 @@ defmodule Db.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [
+      mod: {Db, []},
+      applications: [
+        :logger,
+      ],
+    ]
   end
 
   # Dependencies can be Hex packages:

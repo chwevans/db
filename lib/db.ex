@@ -40,7 +40,7 @@ defmodule Db do
   """
   @callback handle(any, any) :: any
 
-  def start_link() do
+  def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
