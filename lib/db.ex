@@ -40,19 +40,6 @@ defmodule Db do
   """
   @callback handle(any, any) :: any
 
-  def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      worker(Db.Dets, [], [id: Db.Dets, function: :start_link, shutdown: :brutal_kill]),
-    ]
-
-    Logger.info("Starting #{inspect __MODULE__} with children: #{inspect children}")
-
-    options = [strategy: :one_for_one, name: __MODULE__]
-    Supervisor.start_link(children, options)
-  end
-
   @spec execute(atom, any) :: :ok | {:ok, any} | {:error, :notfound | :no_route_found} | {:error, any}
   def execute(command, args) do
     case Db.Router.route(command) do
