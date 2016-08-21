@@ -54,7 +54,7 @@ defmodule Db do
           end
       end
     rescue
-      e in Protocol.UndefinedError -> {:error, :no_route_found}
+      _ in Protocol.UndefinedError -> {:error, :no_route_found}
     end
   end
 
