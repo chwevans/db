@@ -42,13 +42,19 @@ defmodule Db do
 
   @spec execute(atom, any) :: :ok | {:ok, any} | {:error, :notfound | :no_route_found} | {:error, any}
   def execute(command, args) do
-    case Db.Router.route(command) do
-      e = {:error, :no_route_found} -> e
-      route = %Db.Router{inline: inline} ->
-        case inline do
-          true -> handle_execute(route, command, args)
-          false -> spawn(fn -> handle_execute(route, command, args) end)
-        end
+    try do
+      case Db.Router.route(command) do
+        e = {:error, :no_route_found} -> e
+        route = %Db.Router{inline: inline} ->
+          case inline do
+            true -> handle_execute(route, command, args)
+            false ->
+              spawn(fn -> handle_execute(route, command, args) end)
+              :ok
+          end
+      end
+    rescue
+      e in Protocol.UndefinedError -> {:error, :no_route_found}
     end
   end
 
